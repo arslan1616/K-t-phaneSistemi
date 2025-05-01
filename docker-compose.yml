@@ -1,0 +1,117 @@
+# docker-compose.yml
+# version: '3.8' # Bu satırı kaldırabilirsin, artık gerekli değil.
+
+services:
+  db:
+    image: postgres:15
+    container_name: library_db
+    environment:
+      # Ortam değişkenleri aynı kalıyor
+      POSTGRES_USER: library_user
+      POSTGRES_PASSWORD: library_password
+      POSTGRES_DB: library_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - library_network
+    healthcheck: # <-- Veritabanı sağlık kontrolü eklendi
+      # pg_isready komutu veritabanının bağlantı kabul edip etmediğini kontrol eder.
+      # -q (quiet) sadece çıkış kodu döndürür, -U kullanıcıyı, -d veritabanını belirtir.
+      test: ["CMD-SHELL", "pg_isready -U library_user -d library_management -q"]
+      interval: 5s      # Kontrolü her 5 saniyede bir yap
+      timeout: 5s       # Kontrol komutu 5 saniyede yanıt vermezse başarısız say
+      retries: 5        # Başarısız olursa 5 kere daha dene
+      start_period: 10s # Konteyner başladıktan 10 saniye sonra kontroller başlasın
+
+  user_service:
+    container_name: user_service
+    build: ./user_service
+    ports:
+      - "5001:5001"
+    environment:
+      DATABASE_URL: postgresql://library_user:library_password@db:5432/library_management
+      FLASK_APP: run.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5001
+    depends_on:
+      db: # <-- Artık 'db' servisinin sağlıklı olmasını bekle
+        condition: service_healthy
+    volumes:
+      - ./user_service/app:/app/app
+    networks:
+      - library_network
+    # İsteğe bağlı: user_service için de healthcheck eklenebilir
+
+  book_service:
+    container_name: book_service
+    build: ./book_service
+    ports:
+      - "5002:5002"
+    environment:
+      DATABASE_URL: postgresql://library_user:library_password@db:5432/library_management
+      FLASK_APP: run.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5002
+    depends_on:
+      db: # <-- 'db' servisinin sağlıklı olmasını bekle
+        condition: service_healthy
+    volumes:
+      - ./book_service/app:/app/app
+    networks:
+      - library_network
+    # İsteğe bağlı: book_service için de healthcheck eklenebilir
+
+  loan_service:
+    container_name: loan_service
+    build: ./loan_service
+    ports:
+      - "5003:5003"
+    environment:
+      DATABASE_URL: postgresql://library_user:library_password@db:5432/library_management
+      FLASK_APP: run.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5003
+      USER_SERVICE_URL: http://user_service:5001
+      BOOK_SERVICE_URL: http://book_service:5002
+      NOTIFICATION_SERVICE_URL: http://notification_service:5004 # Bunu da ekleyelim
+    depends_on:
+      db: # <-- 'db' servisinin sağlıklı olmasını bekle
+        condition: service_healthy
+      user_service: # <-- User service'in *başlamasını* bekle
+        condition: service_started
+      book_service: # <-- Book service'in *başlamasını* bekle
+        condition: service_started
+      # Notification service'e doğrudan bağımlı değil (onu çağırıyor sadece)
+    volumes:
+      - ./loan_service/app:/app/app
+    networks:
+      - library_network
+    # İsteğe bağlı: loan_service için de healthcheck eklenebilir
+
+  notification_service:
+    container_name: notification_service
+    build: ./notification_service
+    ports:
+      - "5004:5004"
+    environment:
+      DATABASE_URL: postgresql://library_user:library_password@db:5432/library_management
+      FLASK_APP: run.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5004
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./notification_service/app:/app/app
+    networks:
+      - library_network
+
+
+networks:
+  library_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

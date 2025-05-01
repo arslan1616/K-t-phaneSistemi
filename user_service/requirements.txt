@@ -1,0 +1,9 @@
+# user_service/requirements.txt
+Flask>=2.0
+SQLAlchemy>=1.4
+psycopg2-binary>=2.9 # PostgreSQL driver
+python-dotenv>=0.19 # Ortam değişkenlerini .env dosyasından okumak için (opsiyonel, lokal geliştirme için)
+requests>=2.25 # Diğer servislere istek atmak için (ileride Loan Service'de gerekecek)
+bcrypt>=3.2 # Şifre hashleme için
+Flask-SQLAlchemy>=2.5 # Flask ile SQLAlchemy entegrasyonunu kolaylaştırır
+Flask-Cors>=3.0

@@ -1,0 +1,8 @@
+# loan_service/requirements.txt
+Flask>=2.0
+SQLAlchemy>=1.4
+psycopg2-binary>=2.9
+python-dotenv>=0.19
+requests>=2.25 # Diğer servislere HTTP istekleri yapmak için
+Flask-SQLAlchemy>=2.5
+Flask-Cors>=3.0

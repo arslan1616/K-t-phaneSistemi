@@ -1,0 +1,9 @@
+# book_service/requirements.txt
+Flask>=2.0
+SQLAlchemy>=1.4
+psycopg2-binary>=2.9
+python-dotenv>=0.19
+requests>=2.25 # Diğer servislere istek atmak için (ileride gerekecek)
+Flask-SQLAlchemy>=2.5
+Flask-Cors>=3.0
+# Başka özel bağımlılık gerekirse buraya eklenecek

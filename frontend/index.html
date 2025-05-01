@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kütüphane Yönetim Sistemi</title>
+    <style>
+        /* === DAHA ŞIK CSS === */
+        :root {
+            --primary-color: #2980b9; /* Daha canlı mavi */
+            --secondary-color: #2c3e50;
+            --light-grey: #ecf0f1;
+            --medium-grey: #bdc3c7;
+            --dark-grey: #7f8c8d;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --error-bg: #f8d7da;
+            --error-border: #f5c6cb;
+            --error-text: #721c24;
+            --white: #ffffff;
+            --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --border-radius: 5px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Daha yaygın font */
+            line-height: 1.6;
+            padding: 20px;
+            background-color: var(--light-grey);
+            color: var(--secondary-color);
+            margin: 0;
+        }
+        .container {
+            max-width: 950px;
+            margin: 20px auto;
+            background-color: var(--white);
+            padding: 25px 40px;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+         h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-bottom: 25px;
+            margin-top: 40px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        h2:first-of-type { margin-top: 0; }
+        legend {
+            font-weight: 600; /* Daha belirgin */
+            padding: 0 10px;
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+         fieldset {
+            border: 1px solid #e0e0e0; /* Daha yumuşak */
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            border-radius: var(--border-radius);
+            background-color: var(--white); /* Arka planla aynı, sadece çerçeve */
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.95em;
+            color: var(--dark-grey);
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="email"] {
+            display: block; /* Tam genişlik kaplasın */
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--medium-grey);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.2s ease;
+        }
+        input:focus {
+             border-color: var(--primary-color);
+             outline: none; /* Varsayılan focus çerçevesini kaldır */
+             box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2); /* Hafif focus efekti */
+        }
+        button {
+            padding: 12px 22px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: #2574a9; /* Hover rengi */
+            transform: translateY(-1px); /* Hafif kalkma efekti */
+        }
+         button:active {
+             transform: translateY(0px); /* Tıklama efekti */
+             box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        button:disabled {
+             background-color: var(--medium-grey);
+             cursor: not-allowed;
+             transform: none;
+             box-shadow: none;
+        }
+        #messages p {
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin: 0 0 15px 0;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+        #messages .error {
+            color: var(--error-text); background-color: var(--error-bg); border-color: var(--error-border);
+        }
+        #messages .success {
+            color: var(--success-text); background-color: var(--success-bg); border-color: var(--success-border);
+        }
+         ul { list-style: none; padding: 0; margin-top: 15px; }
+         li {
+            border: 1px solid #f0f0f0;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: var(--border-radius);
+            background-color: #fcfcfc;
+            display: flex; /* İçerikleri yan yana getirelim */
+            justify-content: space-between; /* Boşluk bırakalım */
+            align-items: center; /* Dikeyde ortala */
+            flex-wrap: wrap; /* Küçük ekranlarda alt alta insin */
+         }
+          li div { margin-bottom: 5px; } /* Mobil için boşluk */
+          li div:last-child { margin-bottom: 0; }
+          li .item-info { flex-grow: 1; margin-right: 15px; } /* Bilgi kısmı genişlesin */
+          li .item-details { font-size: 0.9em; color: var(--dark-grey); }
+          li strong { color: var(--secondary-color); }
+         .list-placeholder { color: #888; font-style: italic; margin-top: 15px; }
+         #login-status { font-weight: bold; font-size: 0.9em; color: var(--primary-color); }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kütüphane Yönetim Sistemi</h1>
+        <div id="messages"></div>
+
+        <!-- Kullanıcı İşlemleri -->
+        <section id="user-section">
+            <h2>Kullanıcı İşlemleri</h2>
+            <fieldset>
+                <legend>Kullanıcı Kayıt</legend>
+                <form id="register-form">
+                    <label for="reg-username">Kullanıcı Adı:</label>
+                    <input type="text" id="reg-username" required>
+                    <label for="reg-email">E-posta:</label>
+                    <input type="email" id="reg-email" required>
+                    <label for="reg-password">Şifre:</label>
+                    <input type="password" id="reg-password" required>
+                    <button type="submit">Kaydol</button>
+                </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Kullanıcı Giriş</legend>
+                <form id="login-form">
+                    <label for="login-username">Kullanıcı Adı:</label>
+                    <input type="text" id="login-username" required>
+                    <label for="login-password">Şifre:</label>
+                    <input type="password" id="login-password" required>
+                    <button type="submit">Giriş Yap</button>
+                    <span id="login-status"></span>
+                </form>
+            </fieldset>
+
+            <fieldset> <!-- YENİ KULLANICI LİSTESİ BÖLÜMÜ -->
+                <legend>Kullanıcı Listesi</legend>
+                <button id="list-users-btn">Tüm Kullanıcıları Listele</button>
+                <div id="user-list">
+                    <p class="list-placeholder">Kullanıcı listesini görmek için butona tıklayın.</p>
+                </div>
+            </fieldset>
+        </section>
+
+        <!-- Kitap İşlemleri -->
+        <section id="book-section">
+            <h2>Kitap İşlemleri</h2>
+            <fieldset>
+                <legend>Yeni Kitap Ekle</legend>
+                <form id="add-book-form">
+                    <label for="book-title">Başlık:</label>
+                    <input type="text" id="book-title" required>
+                    <label for="book-author">Yazar:</label>
+                    <input type="text" id="book-author" required>
+                    <!-- ISBN KALDIRILDI -->
+                    <label for="book-quantity">Adet:</label>
+                    <input type="number" id="book-quantity" value="1" min="1">
+                    <button type="submit">Kitap Ekle</button>
+                </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Kitap Listesi</legend>
+                <button id="list-books-btn">Tüm Kitapları Listele</button>
+                <div id="book-list">
+                    <p class="list-placeholder">Kitap listesini görmek için butona tıklayın.</p>
+                </div>
+            </fieldset>
+        </section>
+
+        <!-- Ödünç Alma İşlemleri -->
+        <section id="loan-section">
+            <h2>Ödünç Alma/İade İşlemleri</h2>
+            <fieldset>
+                <legend>Kitap Ödünç Al</legend>
+                <form id="borrow-form">
+                    <label for="borrow-user-id">Kullanıcı ID:</label>
+                    <input type="number" id="borrow-user-id" required placeholder="Listeden veya girişten ID">
+                    <label for="borrow-book-id">Kitap ID:</label>
+                    <input type="number" id="borrow-book-id" required placeholder="Kitap listesinden ID">
+                    <button type="submit">Ödünç Al</button>
+                </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Kitap İade Et</legend>
+                <form id="return-form">
+                    <label for="return-loan-id">Ödünç ID (Loan ID):</label>
+                    <input type="number" id="return-loan-id" required placeholder="Ödünç listesinden ID">
+                    <button type="submit">İade Et</button>
+                </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Kullanıcının Ödünçleri</legend>
+                <label for="user-loans-id">Kullanıcı ID:</label>
+                <input type="number" id="user-loans-id" placeholder="Listeden veya girişten ID">
+                <button id="list-user-loans-btn">Kullanıcının Ödünçlerini Listele</button>
+                <div id="user-loan-list">
+                    <p class="list-placeholder">Kullanıcının ödünç listesini görmek için ID girip butona tıklayın.</p>
+                </div>
+            </fieldset>
+        </section>
+    </div> <!-- /container -->
+    <script src="script.js" defer></script>
+</body>
+</html>
