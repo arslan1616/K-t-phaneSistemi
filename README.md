@@ -1,6 +1,6 @@
 # Mikro Servis Tabanlı Kütüphane Yönetim Sistemi
 
-Bu proje, "Yazılım Tasarım Desenleri Dersi – Ödev 2" kapsamında geliştirilmiş, **SOLID prensiplerini** temel alan, **mikro servis mimarisiyle** tasarlanmış bir Kütüphane Yönetim Sistemi uygulamasıdır. Sistem, Docker ve Docker Compose kullanılarak platformdan bağımsız bir şekilde çalıştırılabilmektedir.
+Bu proje, "Yazılım Tasarım Desenleri " kapsamında geliştirilmiş, **SOLID prensiplerini** temel alan, **mikro servis mimarisiyle** tasarlanmış bir Kütüphane Yönetim Sistemi uygulamasıdır. Sistem, Docker ve Docker Compose kullanılarak platformdan bağımsız bir şekilde çalıştırılabilmektedir.
 
 ## Projenin Amacı
 
